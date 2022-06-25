@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+
+use App\Models\Contact;
+use App\Notifications\NewContact;
 
 class ContactController extends Controller
 {
@@ -25,6 +29,9 @@ class ContactController extends Controller
      */
     public function send(Request $request)
     {
-        
+        $contact = Contact::create($request->all());
+
+        Notification::route('mail', config('mail.from.address'))
+            ->notify(new NewContact($contact));
     }
 }
